@@ -28,10 +28,10 @@ RTC_DS1307 RTC;
 Adafruit_NeoPixel hour_strip = Adafruit_NeoPixel(STRIP_LENGTH, HOUR_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel minute_strip = Adafruit_NeoPixel(STRIP_LENGTH, MINUTE_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel seconds_strip = Adafruit_NeoPixel(STRIP_LENGTH, SECONDS_PIN, NEO_GRB + NEO_KHZ800);
-uint32_t hour_bit_color = minute_strip.Color(255, 255, 255);
+uint32_t hour_bit_color = minute_strip.Color(255, 0, 0);
 uint32_t minute_bit_color = minute_strip.Color(0, 255, 0);
-uint32_t seconds_bit_color = minute_strip.Color(0, 255, 255);
-uint32_t background_color = minute_strip.Color(255, 0, 0);
+uint32_t seconds_bit_color = minute_strip.Color(255, 255, 255);
+uint32_t background_color = minute_strip.Color(0, 255, 255);
 
 /*
  * Global state for the LCD Screen
