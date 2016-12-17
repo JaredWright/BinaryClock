@@ -1,32 +1,44 @@
-# CROSS_COMPILE = avr-
-# CC := $(CROSS_COMPILE)gcc
-#
-# C_FILES := led.c blink.c
-# ASM_FILES := ws2812b.S
-# OBJ_FILES := $(notdir $(C_FILES:.c=.o))
-# OBJ_FILES += $(notdir $(ASM_FILES:.S=.o))
-#
-#
-# all: $(OBJ_FILES)
-#
-# $(OBJ_FILES): $(C_FILES) $(ASM_FILES)
-#
-# %.o: %.c
-#         $(CC) $(DBGFLAGS) -c $(INC) -o /$@ $<
+# Compiler/linker options
+CROSS_COMPILE = avr-
+CC := $(CROSS_COMPILE)gcc
+MMCU = atmega328p
+CFLAGS := -Os -DF_CPU=16000000UL -mmcu=$(MMCU) -c
+LDFLAGS := -mmcu=$(MMCU) 
+OUT_NAME = clock
 
-all:
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o blink.o blink.c
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o led.o led.c
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o ws2812b.o ws2812b.S
-	avr-gcc -mmcu=atmega328p blink.o led.o ws2812b.o -o blink
-	avr-objcopy -O ihex -R .eeprom blink blink.hex
+# Which files to be compiled and linked
+C_FILES := led.c blink.c
+ASM_FILES := ws2812b.S
+OBJ_FILES := $(notdir $(C_FILES:.c=.o))
+OBJ_FILES += $(notdir $(ASM_FILES:.S=.o))
+
+# avrdude options
+AVR_PORT ?= /dev/cu.usbmodem1411
+AVR_DEVICE ?= ATMEGA328P
+AVR_PROGRAMMER ?= arduino
+AVR_BAUD ?= 115200
+AVR_FLAGS += -c $(AVR_PROGRAMMER) -p $(AVR_DEVICE) -P $(AVR_PORT) -b $(AVR_BAUD)
+
+all: $(OBJ_FILES) link hex
+$(OBJ_FILES): $(C_FILES) $(ASM_FILES)
+
+.c.o:
+	$(CC) $(CFLAGS) -o $@ $<
+
+.S.o:
+	$(CC) $(CFLAGS) -o $@ $<
+
+link:
+	avr-gcc $(LDFLAGS) blink.o led.o ws2812b.o -o $(OUT_NAME).elf
+
+hex:
+	avr-objcopy -O ihex -R .eeprom $(OUT_NAME).elf $(OUT_NAME).hex
 
 clean:
-	rm *.o *.hex blink
-	rm -r adafruit_neopixel
+	rm -f *.o $(OUT_NAME) $(OUT_NAME).*
 
-flash_osx:
-	avrdude -F -V -c arduino -p ATMEGA328P -P /dev/cu.usbmodem1411 -b 115200 -U flash:w:blink.hex
+flash:
+	avrdude $(AVR_FLAGS) -U flash:w:$(OUT_NAME).hex
 
-neopixel:
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o neopixel.o neopixel.S
+.PHONY: all clean link hex flash
+
