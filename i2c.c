@@ -37,61 +37,108 @@
 #include <avr/io.h> 
 #include <util/twi.h>
 
-uint8_t avr_i2c_read_byte(uint16_t address, uint16_t offset, uint8_t * value)
+// Transmit start condition, slave address, and R/W request
+uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw)
 {
-	if(!value) return -1;
-	// Use the two-wire control register to generate a start condition
-	TWCR = (1 << TWINT) | (1 << TWSTA) | (1<<TWEN);	
-	// Wait for the TWI to ack that the start condition has occurred
-	while (!(TWCR & (1 << TWINT)));
-	// Check the value of TWISTATUS to see if the start condition was successful
-	if ((TWSR & 0xF8) != TW_START) goto error;	
-	// Transmit address frame with R/W bit set to read
-	// To do this, first load the two-wire data register with "SLA_R"
-	TWDR = 0x00;	// SLA_R??
-	// Next, clear (set to 1) the TWINT bit in TWCR to start the address transmission
-	TWCR = (1 << TWINT) | (1 << TWEN);
-	// Wait on TWINT to be set to indicate that the address has been transmitted
-	while (!(TWCR & (1 << TWINT)));
-	// Check the two-wire status register to see if the slave ACKed the request
-	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
-	// Wait for the slave to send data, then ACK the transaction
-	// TODO
-	// *value = whatever came back
-error:
-	return -1;
-}
-
-uint8_t avr_i2c_write_byte(uint16_t address, uint16_t offset, uint8_t value)
-{
-	if(!address) return -1;
+	if(rw != AVR_I2C_WRITE && rw != AVR_I2C_READ) goto error;
 
 	// Use the two-wire control register to generate a start condition
 	TWCR = (1 << TWINT) | (1 << TWSTA) | (1<<TWEN);	
-	// Wait for the TWI to ack that the start condition has occurred
+	// Wait for the TWI to ACK that the start condition has occurred
 	while (!(TWCR & (1 << TWINT)));
 	// Check the value of TWISTATUS to see if the start condition was successful
 	if ((TWSR & 0xF8) != TW_START) goto error;	
-	// Transmit address frame with R/W bit set to read
-	// To do this, first load the two-wire data register with "SLA_W"
-	TWDR = (offset);	// TODO: How to add R/W bit?? Manual says "SLA_W"
-	// Next, clear (set to 1) the TWINT bit in TWCR to start the address transmit
+	// Load slave address + R/W bit into data register
+	TWDR = addr | rw;
+	// Clear (set to 1) the TWINT bit in TWCR to transmit address frame 
 	TWCR = (1 << TWINT) | (1 << TWEN);
-	// Wait on TWINT to be set to indicate that the address has been transmitted
+	// Wait on TWINT to indicate that the address has been transmitted
 	while (!(TWCR & (1 << TWINT)));
-	// Check the two-wire status register to see if the slave ACKed the request
-	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
-	// Transmit one byte to the slave
-	// Load value into the two-wire data register, then set the TWINT flag
-	TWDR = value;
-	TWCR = (1 << TWINT) | (1 << TWEN);	
-	// Wait for TWINT to be set, which indicates the data transmit happened
-	while (!(TWCR & (1 << TWINT)));
-	// Check status register for success, and if ACK/NAK was received
-	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
-	// Send transmition stop contition
-	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	
+	// Check the TWI status register to see if the slave ACKed the request
+	if (rw == AVR_I2C_WRITE && ((TWSR & 0xF8) != TW_MT_SLA_ACK)) goto error;
+	if (rw == AVR_I2C_READ && ((TWSR & 0xF8) != TW_MR_SLA_ACK)) goto error;
 	return 0;
+
 error:
-	return -1;
+	return 1;
 }
+
+// Send transmition stop contition
+void avr_i2c_end(void)
+{
+	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	
+}
+
+uint8_t avr_i2c_write_byte(uint8_t val)
+{
+	// Value to be written
+	TWDR = val;
+	// Transmit the value
+	TWCR = (1 << TWINT) | (1 << TWEN);
+	// Wait for the transmission to complete
+	while (!(TWCR & (1 << TWINT)));
+	// Check that the slave ACKed the transaction
+	if ((TWSR & 0xF8) != TW_MT_DATA_ACK) goto error;	
+	return 0;
+
+error:
+	return 1;
+}
+
+uint8_t avr_i2c_write(uint8_t addr, uint8_t reg, uint8_t * buffer, uint8_t len)
+{
+	uint8_t i, result;
+	if(!buffer) return 1;
+
+	result = avr_i2c_begin(addr, AVR_I2C_WRITE);
+	if(result) goto end;
+	for(i = 0; i < len; i++){
+		result = avr_i2c_write_byte(buffer[i]);
+		if(result) goto end;
+	}
+
+end:
+	avr_i2c_end();
+	return result;
+}
+
+uint8_t avr_i2c_read_byte(uint8_t * val, uint8_t more)
+{
+	uint8_t ack_bit = 0;
+	if(!val) goto error;
+	if(more) ack_bit = 1;
+
+	TWCR = (1 << TWINT) | (1 << TWEN) | (ack_bit << TWEA);	
+	while (!(TWCR & (1 << TWINT)));
+	*val = TWDR;
+	return 0;
+
+error:
+	return 1;
+}
+
+uint8_t avr_i2c_read(uint8_t addr, uint8_t reg, uint8_t * buffer, uint8_t len)
+{
+	uint8_t i, result;
+	if(!buffer) return 1;
+
+	result = avr_i2c_begin(addr, AVR_I2C_WRITE);
+	if(result) goto end;
+	result = avr_i2c_write_byte(reg);
+	if(result) goto end;
+
+	result = avr_i2c_begin(addr, AVR_I2C_READ);
+	if(result) goto end;
+	for(i = 0; i < len; i++){
+		if(i < len - 1){
+			result = avr_i2c_read_byte(buffer + i, 1);
+			if(result) goto end;
+		}else{
+			result = avr_i2c_read_byte(buffer + i, 0);
+		}
+	}
+end:
+	avr_i2c_end();
+	return result;
+}
+
