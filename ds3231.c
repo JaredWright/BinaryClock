@@ -1,6 +1,9 @@
 // Read/write operations for the DS3231 real-time clock
 // Time is encoded in binary coded decimal format
 
+#include "ds3231.h"
+#include "i2c.h"
+
 // Toggle the clock between 12 and 24 hour mode
 // 		mode = 0 for 24 hour mode
 // 		mode = 1 for 12 hour mode
@@ -11,7 +14,7 @@ int ds3231_set_mode(uint8_t mode)
 }
 
 // Set the internal clock of the DS3231 to the values of the given ds3231_time
-void ds3231_set_time(struct ds3231_time * t)
+int ds3231_set_time(struct ds3231_time * t)
 {
 	if(!t) return -1;
 

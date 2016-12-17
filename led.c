@@ -1,5 +1,7 @@
 #include "led.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Structure represents one WS2812B RGB LED
 // A WS2812B reads values in the order G-R-B, so they are orginized in

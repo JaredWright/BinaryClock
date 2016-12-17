@@ -1,3 +1,7 @@
+#ifndef __DS3231_H
+#define __DS3231_H
+
+#include <stdint.h>
 
 __attribute__((packed)) struct ds3231_time {
 	uint8_t year;	// 0 - 99
@@ -10,6 +14,8 @@ __attribute__((packed)) struct ds3231_time {
 };
 
 int ds3231_set_mode(uint8_t mode);
-void ds3231_set_time(struct ds3231_time * t);
+int ds3231_set_time(struct ds3231_time * t);
 int ds3231_get_time(struct ds3231_time * t);
+
+#endif
 

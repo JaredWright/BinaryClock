@@ -7,7 +7,7 @@ LDFLAGS := -mmcu=$(MMCU)
 OUT_NAME = clock
 
 # Which files to be compiled and linked
-C_FILES := led.c blink.c
+C_FILES := i2c.c ds3231.c led.c clock.c
 ASM_FILES := ws2812b.S
 OBJ_FILES := $(notdir $(C_FILES:.c=.o))
 OBJ_FILES += $(notdir $(ASM_FILES:.S=.o))
@@ -35,7 +35,7 @@ hex:
 	avr-objcopy -O ihex -R .eeprom $(OUT_NAME).elf $(OUT_NAME).hex
 
 clean:
-	rm -f *.o $(OUT_NAME) $(OUT_NAME).*
+	rm -f *.o *.hex *.elf 
 
 flash:
 	avrdude $(AVR_FLAGS) -U flash:w:$(OUT_NAME).hex

@@ -33,6 +33,10 @@
 // 		will repond to while acting in slave mode
 // --------------------------------------------
 
+#include "i2c.h"
+#include <avr/io.h> 
+#include <util/twi.h>
+
 uint8_t avr_i2c_read_byte(uint16_t address, uint16_t offset, uint8_t * value)
 {
 	if(!value) return -1;
@@ -41,7 +45,7 @@ uint8_t avr_i2c_read_byte(uint16_t address, uint16_t offset, uint8_t * value)
 	// Wait for the TWI to ack that the start condition has occurred
 	while (!(TWCR & (1 << TWINT)));
 	// Check the value of TWISTATUS to see if the start condition was successful
-	if ((TWSR & 0xF8) != START) goto error;	
+	if ((TWSR & 0xF8) != TW_START) goto error;	
 	// Transmit address frame with R/W bit set to read
 	// To do this, first load the two-wire data register with "SLA_R"
 	TWDR = 0x00;	// SLA_R??
@@ -50,7 +54,7 @@ uint8_t avr_i2c_read_byte(uint16_t address, uint16_t offset, uint8_t * value)
 	// Wait on TWINT to be set to indicate that the address has been transmitted
 	while (!(TWCR & (1 << TWINT)));
 	// Check the two-wire status register to see if the slave ACKed the request
-	if ((TWSR & 0xF8) != MT_SLA_ACK) goto error;
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
 	// Wait for the slave to send data, then ACK the transaction
 	// TODO
 	// *value = whatever came back
@@ -67,7 +71,7 @@ uint8_t avr_i2c_write_byte(uint16_t address, uint16_t offset, uint8_t value)
 	// Wait for the TWI to ack that the start condition has occurred
 	while (!(TWCR & (1 << TWINT)));
 	// Check the value of TWISTATUS to see if the start condition was successful
-	if ((TWSR & 0xF8) != START) goto error;	
+	if ((TWSR & 0xF8) != TW_START) goto error;	
 	// Transmit address frame with R/W bit set to read
 	// To do this, first load the two-wire data register with "SLA_W"
 	TWDR = (offset);	// TODO: How to add R/W bit?? Manual says "SLA_W"
@@ -76,7 +80,7 @@ uint8_t avr_i2c_write_byte(uint16_t address, uint16_t offset, uint8_t value)
 	// Wait on TWINT to be set to indicate that the address has been transmitted
 	while (!(TWCR & (1 << TWINT)));
 	// Check the two-wire status register to see if the slave ACKed the request
-	if ((TWSR & 0xF8) != MT_SLA_ACK) goto error;
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
 	// Transmit one byte to the slave
 	// Load value into the two-wire data register, then set the TWINT flag
 	TWDR = value;
@@ -84,7 +88,7 @@ uint8_t avr_i2c_write_byte(uint16_t address, uint16_t offset, uint8_t value)
 	// Wait for TWINT to be set, which indicates the data transmit happened
 	while (!(TWCR & (1 << TWINT)));
 	// Check status register for success, and if ACK/NAK was received
-	if ((TWSR & 0xF8) != MT_SLA_ACK) goto error;
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK) goto error;
 	// Send transmition stop contition
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	
 	return 0;
