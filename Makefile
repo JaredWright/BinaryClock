@@ -29,7 +29,7 @@ $(OBJ_FILES): $(C_FILES) $(ASM_FILES)
 	$(CC) $(CFLAGS) -o $@ $<
 
 link:
-	avr-gcc $(LDFLAGS) blink.o led.o ws2812b.o -o $(OUT_NAME).elf
+	avr-gcc $(LDFLAGS) $(OBJ_FILES) -o $(OUT_NAME).elf
 
 hex:
 	avr-objcopy -O ihex -R .eeprom $(OUT_NAME).elf $(OUT_NAME).hex
