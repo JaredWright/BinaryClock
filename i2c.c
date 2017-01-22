@@ -36,6 +36,13 @@
 #include "i2c.h"
 #include <avr/io.h> 
 #include <util/twi.h>
+#include <util/delay.h>
+
+// Initialize bit rate for the TWI interface
+void avr_i2c_init(uint8_t bitrate)
+{
+	TWBR = bitrate;
+}
 
 // Transmit start condition, slave address, and R/W request
 uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw)
@@ -47,9 +54,9 @@ uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw)
 	// Wait for the TWI to ACK that the start condition has occurred
 	while (!(TWCR & (1 << TWINT)));
 	// Check the value of TWISTATUS to see if the start condition was successful
-	if ((TWSR & 0xF8) != TW_START) goto error;	
+	if ((TWSR & 0xF8) != TW_START) goto error;
 	// Load slave address + R/W bit into data register
-	TWDR = addr | rw;
+	TWDR = (addr | rw);
 	// Clear (set to 1) the TWINT bit in TWCR to transmit address frame 
 	TWCR = (1 << TWINT) | (1 << TWEN);
 	// Wait on TWINT to indicate that the address has been transmitted
@@ -91,13 +98,13 @@ uint8_t avr_i2c_write(uint8_t addr, uint8_t reg, uint8_t * buffer, uint8_t len)
 	if(!buffer) return 1;
 
 	result = avr_i2c_begin(addr, AVR_I2C_WRITE);
-	if(result) goto end;
+	if(result) goto error;
 	for(i = 0; i < len; i++){
 		result = avr_i2c_write_byte(buffer[i]);
-		if(result) goto end;
+		if(result) goto error;
 	}
 
-end:
+error:
 	avr_i2c_end();
 	return result;
 }
@@ -126,6 +133,9 @@ uint8_t avr_i2c_read(uint8_t addr, uint8_t reg, uint8_t * buffer, uint8_t len)
 	if(result) goto end;
 	result = avr_i2c_write_byte(reg);
 	if(result) goto end;
+	avr_i2c_end();
+
+	_delay_us(10);
 
 	result = avr_i2c_begin(addr, AVR_I2C_READ);
 	if(result) goto end;

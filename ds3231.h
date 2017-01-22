@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define DS3231_I2C_ADDR (0x68 << 1)
+
 __attribute__((packed)) struct ds3231_time {
 	uint8_t second;	// 0 - 59
 	uint8_t minute;	// 0 - 59
