@@ -1,0 +1,552 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:maxim
+LIBS:BinaryClock-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L ATmega32U4 U?
+U 1 1 587EE75C
+P -7700 -5300
+F 0 "U?" H -8600 -3600 50  0000 C CNN
+F 1 "ATmega32U4" H -8350 -6850 50  0000 C CNN
+F 2 "" H -6500 -4200 50  0000 C CNN
+F 3 "" H -6500 -4200 50  0000 C CNN
+	1    -7700 -5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L DS3231 U?
+U 1 1 587EE829
+P -3800 -5550
+F 0 "U?" H -3900 -5075 50  0000 R CNN
+F 1 "DS3231" H -3900 -5150 50  0000 R CNN
+F 2 "Housings_SOIC:SOIC-16_7.5x10.3mm_Pitch1.27mm" H -3750 -5950 50  0001 L CNN
+F 3 "" H -3530 -5300 50  0001 C CNN
+	1    -3800 -5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 587EE8CE
+P -4950 -6150
+F 0 "R?" H -4920 -6130 50  0000 L CNN
+F 1 "R_Small" H -4920 -6190 50  0000 L CNN
+F 2 "" H -4950 -6150 50  0000 C CNN
+F 3 "" H -4950 -6150 50  0000 C CNN
+	1    -4950 -6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 587EE908
+P -4500 -6150
+F 0 "R?" H -4470 -6130 50  0000 L CNN
+F 1 "R_Small" H -4470 -6190 50  0000 L CNN
+F 2 "" H -4500 -6150 50  0000 C CNN
+F 3 "" H -4500 -6150 50  0000 C CNN
+	1    -4500 -6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 587EE9F6
+P -9550 -3700
+F 0 "#PWR?" H -9550 -3950 50  0001 C CNN
+F 1 "GND" H -9550 -3850 50  0000 C CNN
+F 2 "" H -9550 -3700 50  0000 C CNN
+F 3 "" H -9550 -3700 50  0000 C CNN
+	1    -9550 -3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 587EEA16
+P -3800 -4750
+F 0 "#PWR?" H -3800 -5000 50  0001 C CNN
+F 1 "GND" H -3800 -4900 50  0000 C CNN
+F 2 "" H -3800 -4750 50  0000 C CNN
+F 3 "" H -3800 -4750 50  0000 C CNN
+	1    -3800 -4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR?
+U 1 1 587EEA36
+P -10000 -6550
+F 0 "#PWR?" H -10000 -6700 50  0001 C CNN
+F 1 "+5V" H -10000 -6410 50  0000 C CNN
+F 2 "" H -10000 -6550 50  0000 C CNN
+F 3 "" H -10000 -6550 50  0000 C CNN
+	1    -10000 -6550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Battery_Cell BT?
+U 1 1 587EEA82
+P -3050 -5150
+F 0 "BT?" H -2950 -5050 50  0000 L CNN
+F 1 "Battery_Cell" H -2950 -5150 50  0000 L CNN
+F 2 "" V -3050 -5090 50  0000 C CNN
+F 3 "" V -3050 -5090 50  0000 C CNN
+	1    -3050 -5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR?
+U 1 1 587EEC07
+P -4950 -6800
+F 0 "#PWR?" H -4950 -6950 50  0001 C CNN
+F 1 "+5V" H -4950 -6660 50  0000 C CNN
+F 2 "" H -4950 -6800 50  0000 C CNN
+F 3 "" H -4950 -6800 50  0000 C CNN
+	1    -4950 -6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR?
+U 1 1 587EEC2A
+P -4500 -6800
+F 0 "#PWR?" H -4500 -6950 50  0001 C CNN
+F 1 "+5V" H -4500 -6660 50  0000 C CNN
+F 2 "" H -4500 -6800 50  0000 C CNN
+F 3 "" H -4500 -6800 50  0000 C CNN
+	1    -4500 -6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 587EEF42
+P -3050 -4750
+F 0 "#PWR?" H -3050 -5000 50  0001 C CNN
+F 1 "GND" H -3050 -4900 50  0000 C CNN
+F 2 "" H -3050 -4750 50  0000 C CNN
+F 3 "" H -3050 -4750 50  0000 C CNN
+	1    -3050 -4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 587EF1F2
+P -6200 -7250
+F 0 "R?" H -6170 -7230 50  0000 L CNN
+F 1 "R_Small" H -6170 -7290 50  0000 L CNN
+F 2 "" H -6200 -7250 50  0000 C CNN
+F 3 "" H -6200 -7250 50  0000 C CNN
+	1    -6200 -7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 587EF2D5
+P -5750 -7250
+F 0 "R?" H -5720 -7230 50  0000 L CNN
+F 1 "R_Small" H -5720 -7290 50  0000 L CNN
+F 2 "" H -5750 -7250 50  0000 C CNN
+F 3 "" H -5750 -7250 50  0000 C CNN
+	1    -5750 -7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 587EF2FF
+P -5300 -7250
+F 0 "R?" H -5270 -7230 50  0000 L CNN
+F 1 "R_Small" H -5270 -7290 50  0000 L CNN
+F 2 "" H -5300 -7250 50  0000 C CNN
+F 3 "" H -5300 -7250 50  0000 C CNN
+	1    -5300 -7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L DS3231 U?
+U 1 1 5887F4C4
+P 9350 4550
+F 0 "U?" H 9250 5025 50  0000 R CNN
+F 1 "DS3231" H 9250 4950 50  0000 R CNN
+F 2 "Housings_SOIC:SOIC-16_7.5x10.3mm_Pitch1.27mm" H 9400 4150 50  0001 L CNN
+F 3 "" H 9620 4800 50  0001 C CNN
+	1    9350 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5887F797
+P 8450 4000
+F 0 "R?" V 8530 4000 50  0000 C CNN
+F 1 "1k" V 8450 4000 50  0000 C CNN
+F 2 "" V 8380 4000 50  0000 C CNN
+F 3 "" H 8450 4000 50  0000 C CNN
+	1    8450 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5887F7D6
+P 8750 4000
+F 0 "R?" V 8830 4000 50  0000 C CNN
+F 1 "1k" V 8750 4000 50  0000 C CNN
+F 2 "" V 8680 4000 50  0000 C CNN
+F 3 "" H 8750 4000 50  0000 C CNN
+	1    8750 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Crystal Y?
+U 1 1 5887F841
+P 7100 3000
+F 0 "Y?" H 7100 3150 50  0000 C CNN
+F 1 "16MHz" H 7100 2850 50  0000 C CNN
+F 2 "" H 7100 3000 50  0000 C CNN
+F 3 "" H 7100 3000 50  0000 C CNN
+	1    7100 3000
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5887FC8B
+P 7900 3550
+F 0 "#PWR?" H 7900 3300 50  0001 C CNN
+F 1 "GND" H 7900 3400 50  0000 C CNN
+F 2 "" H 7900 3550 50  0000 C CNN
+F 3 "" H 7900 3550 50  0000 C CNN
+	1    7900 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5887FCCF
+P 7600 3250
+F 0 "C?" H 7625 3350 50  0000 L CNN
+F 1 "10pF" H 7625 3150 50  0000 L CNN
+F 2 "" H 7638 3100 50  0000 C CNN
+F 3 "" H 7600 3250 50  0000 C CNN
+	1    7600 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 5887FD1F
+P 7600 2850
+F 0 "C?" H 7625 2950 50  0000 L CNN
+F 1 "10pF" H 7625 2750 50  0000 L CNN
+F 2 "" H 7638 2700 50  0000 C CNN
+F 3 "" H 7600 2850 50  0000 C CNN
+	1    7600 2850
+	0    1    1    0   
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 5888112B
+P 4050 1900
+F 0 "#PWR?" H 4050 1750 50  0001 C CNN
+F 1 "VCC" H 4050 2050 50  0000 C CNN
+F 2 "" H 4050 1900 50  0000 C CNN
+F 3 "" H 4050 1900 50  0000 C CNN
+	1    4050 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 588813DC
+P 9350 5200
+F 0 "#PWR?" H 9350 4950 50  0001 C CNN
+F 1 "GND" H 9350 5050 50  0000 C CNN
+F 2 "" H 9350 5200 50  0000 C CNN
+F 3 "" H 9350 5200 50  0000 C CNN
+	1    9350 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Battery_Cell BT?
+U 1 1 58881711
+P 10150 4950
+F 0 "BT?" H 10250 5050 50  0000 L CNN
+F 1 "Battery_Cell" H 10250 4950 50  0000 L CNN
+F 2 "" V 10150 5010 50  0000 C CNN
+F 3 "" V 10150 5010 50  0000 C CNN
+	1    10150 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5888182A
+P 10150 5200
+F 0 "#PWR?" H 10150 4950 50  0001 C CNN
+F 1 "GND" H 10150 5050 50  0000 C CNN
+F 2 "" H 10150 5200 50  0000 C CNN
+F 3 "" H 10150 5200 50  0000 C CNN
+	1    10150 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 588818D8
+P 9350 4050
+F 0 "#PWR?" H 9350 3900 50  0001 C CNN
+F 1 "VCC" H 9350 4200 50  0000 C CNN
+F 2 "" H 9350 4050 50  0000 C CNN
+F 3 "" H 9350 4050 50  0000 C CNN
+	1    9350 4050
+	1    0    0    -1  
+$EndComp
+Text Label 8350 2150 0    60   ~ 0
+LED1
+$Comp
+L R R?
+U 1 1 5888257D
+P 7800 2150
+F 0 "R?" V 7700 2150 50  0000 C CNN
+F 1 "220" V 7800 2150 50  0000 C CNN
+F 2 "" V 7730 2150 50  0000 C CNN
+F 3 "" H 7800 2150 50  0000 C CNN
+	1    7800 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 58882698
+P 7800 2350
+F 0 "R?" V 7700 2350 50  0000 C CNN
+F 1 "220" V 7800 2350 50  0000 C CNN
+F 2 "" V 7730 2350 50  0000 C CNN
+F 3 "" H 7800 2350 50  0000 C CNN
+	1    7800 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 58882725
+P 7800 2550
+F 0 "R?" V 7700 2550 50  0000 C CNN
+F 1 "220" V 7800 2550 50  0000 C CNN
+F 2 "" V 7730 2550 50  0000 C CNN
+F 3 "" H 7800 2550 50  0000 C CNN
+	1    7800 2550
+	0    1    1    0   
+$EndComp
+Text Label 8350 2350 0    60   ~ 0
+LED2
+Text Label 8350 2550 0    60   ~ 0
+LED3
+$Comp
+L ATMEGA328-AU IC?
+U 1 1 58883B12
+P 5300 3350
+F 0 "IC?" H 4550 4600 50  0000 L BNN
+F 1 "ATMEGA328-AU" H 5700 1950 50  0000 L BNN
+F 2 "TQFP32" H 5300 3350 50  0000 C CIN
+F 3 "" H 5300 3350 50  0000 C CNN
+	1    5300 3350
+	1    0    0    -1  
+$EndComp
+Text GLabel 6550 3600 0    60   BiDi ~ 0
+SCL
+Text GLabel 6550 3500 0    60   BiDi ~ 0
+SDA
+Text GLabel 7850 4550 0    60   BiDi ~ 0
+SDA
+Text GLabel 7850 4450 0    60   BiDi ~ 0
+SDA
+$Comp
+L VCC #PWR?
+U 1 1 5888547F
+P 8450 3600
+F 0 "#PWR?" H 8450 3450 50  0001 C CNN
+F 1 "VCC" H 8450 3750 50  0000 C CNN
+F 2 "" H 8450 3600 50  0000 C CNN
+F 3 "" H 8450 3600 50  0000 C CNN
+	1    8450 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 588854C3
+P 8750 3600
+F 0 "#PWR?" H 8750 3450 50  0001 C CNN
+F 1 "VCC" H 8750 3750 50  0000 C CNN
+F 2 "" H 8750 3600 50  0000 C CNN
+F 3 "" H 8750 3600 50  0000 C CNN
+	1    8750 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 58885855
+P 4100 4800
+F 0 "#PWR?" H 4100 4550 50  0001 C CNN
+F 1 "GND" H 4100 4650 50  0000 C CNN
+F 2 "" H 4100 4800 50  0000 C CNN
+F 3 "" H 4100 4800 50  0000 C CNN
+	1    4100 4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 58885A9D
+P 4100 3200
+F 0 "C?" H 4125 3300 50  0000 L CNN
+F 1 "C" H 4125 3100 50  0000 L CNN
+F 2 "" H 4138 3050 50  0000 C CNN
+F 3 "" H 4100 3200 50  0000 C CNN
+	1    4100 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	-6500 -5650 -4300 -5650
+Wire Wire Line
+	-6500 -5550 -4300 -5550
+Wire Wire Line
+	-4950 -6800 -4950 -6250
+Wire Wire Line
+	-4500 -6800 -4500 -6250
+Wire Wire Line
+	-4950 -6050 -4950 -5650
+Connection ~ -4950 -5650
+Wire Wire Line
+	-4500 -6050 -4500 -5550
+Connection ~ -4500 -5550
+Wire Wire Line
+	-3800 -4750 -3800 -5050
+Wire Wire Line
+	-3050 -4750 -3050 -5050
+Wire Wire Line
+	-3050 -5350 -3300 -5350
+Wire Wire Line
+	-6500 -6850 -6200 -6850
+Wire Wire Line
+	-6500 -6750 -5750 -6750
+Wire Wire Line
+	-5750 -6750 -5750 -7150
+Wire Wire Line
+	-6500 -6650 -5300 -6650
+Wire Wire Line
+	-5300 -6650 -5300 -7150
+Wire Wire Line
+	-6200 -6850 -6200 -7150
+Wire Wire Line
+	7850 4450 8850 4450
+Wire Wire Line
+	7850 4550 8850 4550
+Connection ~ 8450 4450
+Connection ~ 8750 4550
+Wire Wire Line
+	9350 5050 9350 5200
+Wire Wire Line
+	9850 4750 10150 4750
+Wire Wire Line
+	10150 5050 10150 5200
+Wire Wire Line
+	7950 2150 8350 2150
+Wire Wire Line
+	8350 2350 7950 2350
+Wire Wire Line
+	7950 2550 8350 2550
+Wire Wire Line
+	6300 2850 7450 2850
+Connection ~ 7100 2850
+Wire Wire Line
+	7750 2850 7900 2850
+Wire Wire Line
+	7900 2850 7900 3550
+Wire Wire Line
+	6400 3050 6800 3050
+Wire Wire Line
+	6800 3050 6800 3150
+Wire Wire Line
+	6800 3150 7450 3150
+Wire Wire Line
+	7450 3150 7450 3250
+Connection ~ 7100 3150
+Wire Wire Line
+	7750 3250 7900 3250
+Connection ~ 7900 3250
+Wire Wire Line
+	7650 2150 6600 2150
+Wire Wire Line
+	6600 2150 6600 2250
+Wire Wire Line
+	6600 2250 6300 2250
+Wire Wire Line
+	7650 2350 6300 2350
+Wire Wire Line
+	7650 2550 6600 2550
+Wire Wire Line
+	6600 2550 6600 2450
+Wire Wire Line
+	6600 2450 6300 2450
+Wire Wire Line
+	8450 3600 8450 3850
+Wire Wire Line
+	8450 4150 8450 4450
+Wire Wire Line
+	8750 3600 8750 3850
+Wire Wire Line
+	8750 4150 8750 4550
+Wire Wire Line
+	4050 1900 4050 2350
+Wire Wire Line
+	4050 2350 4400 2350
+Wire Wire Line
+	4400 2250 4050 2250
+Connection ~ 4050 2250
+Wire Wire Line
+	4400 4350 4100 4350
+Wire Wire Line
+	4100 3350 4100 4800
+Wire Wire Line
+	4400 4450 4100 4450
+Connection ~ 4100 4450
+Wire Wire Line
+	4400 4550 4100 4550
+Connection ~ 4100 4550
+Wire Wire Line
+	4400 2850 4100 2850
+Wire Wire Line
+	4100 2850 4100 3050
+Connection ~ 4100 4350
+Wire Wire Line
+	6400 3050 6400 2950
+Wire Wire Line
+	6400 2950 6300 2950
+$EndSCHEMATC
