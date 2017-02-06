@@ -1,63 +1,83 @@
 #include <avr/io.h>
-
 #include <util/delay.h>
+#include "clock.h"
 #include "led.h"
 #include "ds3231.h"
+#include "i2c.h"
  
-#define BLINK_DELAY_MS 1000
-#define ONBOARD_LED_ON() (PORTB |= (1 << DDB5))
-#define ONBOARD_LED_OFF() (PORTB &= ~(1 << DDB5))
+//
+// Private data
+//
+static led_strand_t * hour_strand;
+static led_strand_t * minute_strand;
+static led_strand_t * second_strand;
+static struct rgb hour_color = {HOUR_G, HOUR_R, HOUR_B};
+static struct rgb minute_color = {MINUTE_G, MINUTE_R, MINUTE_B};
+static struct rgb second_color = {SECOND_G, SECOND_R, SECOND_B};
+static struct rgb background_color = {BACKGROUND_G, BACKGROUND_R, BACKGROUND_B};
+static struct rgb off_color;
 
-#ifndef F_CPU
-#define F_CPU 16000000UL
-#endif
+//
+// Private declarations
+//
+void draw_clock_face(led_strand_t * s, uint8_t value, struct rgb * color);
+void set_bit_color(led_strand_t * s, uint8_t bit_number, struct rgb * color);
+void draw_background(led_strand_t * s);
 
-#define F_SCL 100000UL
-#define TWI_PRESCALAR 1
-// #define TWI_BIT_RATE ((((F_CPU / F_SCL) / TWI_PRESCALAR) - 16 ) / 2)
-#define TWI_BIT_RATE 10		// Smallest value (fastest rate)
-
-void setup()
+//
+// Implementation
+//
+void clock_init()
 {
-	// Setup PORTB, pin 0 as output for led
-	DDRB = (1 << DDB0) /* | (1 << DDB4) | (1 << DDB5) */ ;
-	avr_i2c_init(TWI_BIT_RATE);
+	hour_strand = led_strand_init(CLOCK_STRAND_LEN, &PORTB, PINB0);
+	minute_strand = led_strand_init(CLOCK_STRAND_LEN, &PORTB, PINB1);
+	second_strand = led_strand_init(CLOCK_STRAND_LEN, &PORTB, PINB2);
+
+	draw_background(hour_strand);
+	draw_background(minute_strand);
+	draw_background(second_strand);
 }
 
-void swirl(led_strand_t * leds)
+void clock_show_time(uint8_t hour, uint8_t minute, uint8_t second)
 {
-	uint8_t i = 0;
-	if(!leds) return;
-	for(i = 0; i < 255; i++){
-		led_strand_set(leds, 0, i, 255 - i, 0);
-		led_strand_draw(leds);
-		_delay_ms(20);
+	draw_clock_face(hour_strand, hour, &hour_color);
+	draw_clock_face(minute_strand, minute, &minute_color);
+	draw_clock_face(second_strand, second, &second_color);
+}
+
+void draw_clock_face(led_strand_t * s, uint8_t value, struct rgb * color)
+{
+	uint8_t i;
+	for(i = 0; i < BITS_PER_STRAND; i++){
+		if((value >> i) & 1){
+			set_bit_color(s, i, color);
+		}else{
+			set_bit_color(s, i, &off_color);
+		}
 	}
-	for(i = 0; i < 255; i++){
-		led_strand_set(leds, 0, 255 - i, 0, i);
-		led_strand_draw(leds);
-		_delay_ms(20);
-	}
-	for(i = 0; i < 255; i++){
-		led_strand_set(leds, 0, 0, i, 255 - i);
-		led_strand_draw(leds);
-		_delay_ms(20);
+
+	led_strand_draw(s);	
+}
+
+void set_bit_color(led_strand_t * s, uint8_t bit_number, struct rgb * color)
+{
+	uint8_t led_count = led_strand_get_count(s);
+	uint8_t bit_position = (led_count - (bit_number * (LED_BIT_LEN + LED_SPACER_LEN))) - LED_BIT_LEN;
+	uint8_t i;
+
+	for(i = 0; i < LED_BIT_LEN; i++){
+		led_strand_set(s, bit_position + i, color);
 	}
 }
 
-void do_clock()
+void draw_background(led_strand_t * s)
 {
-	led_strand_t * leds = led_strand_init(1);
-	struct ds3231_time t; 
-	while(1){
-		// i2c_test();
-		ds3231_get_time(&t);
-		// swirl(leds);
-	}	
+	uint8_t i;
+	if(!s) return;
+
+	for(i = 0; i < CLOCK_STRAND_LEN; i++){
+		led_strand_set(s, i, &background_color);
+	}
+	led_strand_draw(s);
 }
 
-int main (void)
-{
-	setup();
-	do_clock();
-}
