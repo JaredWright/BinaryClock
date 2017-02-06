@@ -7,19 +7,20 @@ LDFLAGS := -mmcu=$(MMCU)
 OUT_NAME = clock
 
 # Which files to be compiled and linked
-C_FILES := i2c.c ds3231.c led.c clock.c
+C_FILES := i2c.c ds3231.c led.c clock.c main.c
 ASM_FILES := ws2812b.S
 OBJ_FILES := $(notdir $(C_FILES:.c=.o))
 OBJ_FILES += $(notdir $(ASM_FILES:.S=.o))
 
 # avrdude options
-AVR_PORT ?= /dev/cu.usbmodem1411
+AVR_PORT ?= /dev/cu.usbmodem1421
 AVR_DEVICE ?= ATMEGA328P
 AVR_PROGRAMMER ?= arduino
 AVR_BAUD ?= 115200
 AVR_FLAGS += -c $(AVR_PROGRAMMER) -p $(AVR_DEVICE) -P $(AVR_PORT) -b $(AVR_BAUD)
 
 all: $(OBJ_FILES) link hex
+
 $(OBJ_FILES): $(C_FILES) $(ASM_FILES)
 
 .c.o:
@@ -37,8 +38,11 @@ hex:
 clean:
 	rm -f *.o *.hex *.elf 
 
-flash:
+avrdude:
 	avrdude $(AVR_FLAGS) -U flash:w:$(OUT_NAME).hex
+
+teensy_loader:
+	teensy_loader_cli -mmcu=atmega32u4 -w $(OUT_NAME).hex
 
 .PHONY: all clean link hex flash
 
