@@ -37,9 +37,7 @@ led_strand_t * led_strand_init(uint8_t count, volatile uint8_t * port, uint8_t p
 
 	// Set the specified port/pin as an output 
 	if(pin > 7) goto error;
-	if(port == &PORTA){
-		DDRA |= (1 << pin);
-	}else if(port == &PORTB){
+	if(port == &PORTB){
 		DDRB |= 1 << pin;
 	}else if (port == &PORTC){
 		DDRC |= 1 << pin;
