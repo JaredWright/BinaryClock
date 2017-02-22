@@ -1,53 +1,42 @@
-// Driver for the TWI (two-wire interface) on an AVR processor.
-// TWI is used to implement I2C communictions in all I2C modes
-// 
-// AVR TWI register overview:
-// --------------------------------------------
-// 	TWCR = Two-wire control register:
-// 	
-// 	Bit		  7       6      5       4      3       2     1     0
-// 	Name  | TWINT | TWEA | TWSTA | TWSTO | TWWC | TWEN |  -  | TWIE  |
-// 	R/W      R/W     R/W    R/W     R/W     R      R/W    R     R/W
-//
-// 		TWINT = Two-wire interupt bit
-// 		TWEA = Two-wire enable acknowledge (i.e. transmit an ACK)
-// 		TWSTA = Two-wire start condition bit
-// 		TWSTO = Two-wire stop condition bit
-// 		TWWC = Two-wire write collision (data transmitted/received as same time)
-// 		TWEN = Two-wire interface enable bit
-// 		TWIE = Two-wire interupt enable bit
-// --------------------------------------------
-// 	TWSR = Two-wire status register
-// 		Bits 7:3 = Status code bits
-// 		Bit 2 = reserved
-// 		Bits 1:0 = bit rate prescalar value
-// --------------------------------------------
-// 	TWDR = Two-wire data register
-// 		Used as the transmit and recieve buffer for read/write operations 
-// --------------------------------------------
-// 	TWBR = Two-wire bit rate register
-// 		Determines the clock speed of TWI
-// --------------------------------------------
-// 	TWAR = Two-wire slave address register
-// 		This register is used to assign a slave address that this TWI interface
-// 		will repond to while acting in slave mode
-// --------------------------------------------
-
 #include "i2c.h"
 #include <avr/io.h> 
 #include <util/twi.h>
 #include <util/delay.h>
 
-// Initialize bit rate for the TWI interface
+//
+// Private declarations
+//
+#define AVR_I2C_READ		1
+#define AVR_I2C_WRITE		0
+
+// Transmit a start condition, the 7 bit slave address, and R/W bit
+uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw);
+
+// Send transmition stop contition
+void avr_i2c_end(void);
+
+// Read one byte from the active slave on the I2C bus into buffer at address val
+// If argument more > 0, an ACK will be transmitted, resulting in the slave
+// sending more data if available. If more = 0, no ack will be generated and the
+// active slave will stop transmitting 
+uint8_t avr_i2c_read_byte(uint8_t * val, uint8_t more);
+
+// Writes one byte to the active slave on the I2C bus 
+uint8_t avr_i2c_write_byte(uint8_t val);
+
+
+//
+// Implementation
+//
 void avr_i2c_init(uint8_t bitrate)
 {
 	TWBR = bitrate;
 }
 
-// Transmit start condition, slave address, and R/W request
 uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw)
 {
 	if(rw != AVR_I2C_WRITE && rw != AVR_I2C_READ) goto error;
+	if((addr & 0x80) > 0) goto error; // Check that address is 7 bits
 
 	// Use the two-wire control register to generate a start condition
 	TWCR = (1 << TWINT) | (1 << TWSTA) | (1<<TWEN);	
@@ -55,7 +44,7 @@ uint8_t avr_i2c_begin(uint8_t addr, uint8_t rw)
 	while (!(TWCR & (1 << TWINT)));
 	// Check the value of TWISTATUS to see if the start condition was successful
 	if ((TWSR & 0xF8) != TW_START) goto error;
-	// Load slave address + R/W bit into data register
+	// Load 7 bit slave address + R/W bit into data register
 	TWDR = (addr | rw);
 	// Clear (set to 1) the TWINT bit in TWCR to transmit address frame 
 	TWCR = (1 << TWINT) | (1 << TWEN);
@@ -70,7 +59,6 @@ error:
 	return 1;
 }
 
-// Send transmition stop contition
 void avr_i2c_end(void)
 {
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	
@@ -130,24 +118,24 @@ uint8_t avr_i2c_read(uint8_t addr, uint8_t reg, uint8_t * buffer, uint8_t len)
 	if(!buffer) return 1;
 
 	result = avr_i2c_begin(addr, AVR_I2C_WRITE);
-	if(result) goto end;
+	if(result) goto error;
 	result = avr_i2c_write_byte(reg);
-	if(result) goto end;
+	if(result) goto error;
 	avr_i2c_end();
 
 	_delay_us(10);
 
 	result = avr_i2c_begin(addr, AVR_I2C_READ);
-	if(result) goto end;
+	if(result) goto error;
 	for(i = 0; i < len; i++){
 		if(i < len - 1){
 			result = avr_i2c_read_byte(buffer + i, 1);
-			if(result) goto end;
+			if(result) goto error;
 		}else{
 			result = avr_i2c_read_byte(buffer + i, 0);
 		}
 	}
-end:
+error:
 	avr_i2c_end();
 	return result;
 }

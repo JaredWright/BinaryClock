@@ -1,10 +1,8 @@
 #define __SFR_OFFSET 0 
 #include <avr/io.h> 
-
-.equ      OUTBIT,   0
-
 ;
-; The WS2812b receives data using a 1 wire serial protocol that mixes the clock
+; This file implements a driver for drawing strands of WS2812b LEDs (adafruit neopixels)
+; A WS2812b LED receives data using a 1 wire serial protocol that mixes the clock
 ; and data together, and uses timing to distinguish values of '0' and '1'
 ;
 ; A value of '0' looks like this:
@@ -24,39 +22,48 @@
 ;                            ------------
 ;                            .4us (8 ticks @ 20MHz)
 
-; extern void ws2812b_strand_draw(uint8_t * buffer, uint16_t size);
+; Usage: 
+; void ws2812b_strand_draw(uint8_t * buffer, uint16_t size,
+;							volatile uint8_t * port, uint8_t pin);
 ;
-; r17 = busy wait counter
-; r18 = data byte
-; r19 = 7-bit count
-; r20 = 1 output
-; r21 = 0 output
-; r22 = SREG save
-; r24:25 = 16-bit count
-; r26:27 (X) = data pointer
+; Registers:
+; r18 = Current value (byte) being written 
+; r19 = Counter for how many bits of r18 have been output
+; r20 = '1' output
+; r21 = '0' output
+; r22 = Save SREG to restore before return
+; r24:25 = Length of buffer pointed to by 26:27 (uint16_t size)
+; r26:27 = (X) = Data pointer to an array of 24-bit GRB values (uint8_t * buffer)
+; r28:29 = (Y) = MMIO address of the PORT to use as the output
+; r30 = Which pin on the specified PORT to use as the output
+;
+
 .global ws2812b_strand_draw
 ws2812b_strand_draw:
-	movw   r26, r24      ;r26:27 = X = p_buf
-	movw   r24, r22      ;r24:25 = count
-	in     r22, SREG     ;save SREG (global int state)
-	cli                  ;no interrupts from here on, we're cycle-counting
-	in     r20, PORTB
-	ori    r20, (1<<OUTBIT)         ;our '1' output
-	in     r21, PORTB
-	andi   r21, ~(1<<OUTBIT)        ;our '0' output
-	ldi    r19, 7        ;7 bit counter (8th bit is different)
-	ld     r18,X+        ;get first data byte
-loop1:
-	out    PORTB, r20    ; 1   +0 start of a bit pulse
+	; move arguments into registers as defined above
+	movw   r26, r24		 
+	movw   r24, r22
+	movw   r28, r20
+	mov    r30, r18
+	in     r22, SREG
+	ld     r20, Y
+	or     r20, r30
+	ld     r21, Y
+	com    r30
+	and    r21, r30
+	ldi    r19, 7        ; counter for first 7 bits (8th bit handled different)
+	ld     r18,X+        ; load first data byte to be clocked out
+	cli    				 ; no interrupts from here on
+pulse_begin:
+	st     Y , r20		 ; 2 
 	lsl    r18           ; 1   +1 next bit into C, MSB first
-	brcs   L1            ; 1/2 +2 branch if 1
-	nop                  ; 1   +3
+	brcs   pulse_one     ; 1/2 +2 branch if 1
+pulse_zero:
 	nop                  ; 1   +4
 	nop                  ; 1   +5
 	nop                  ; 1   +6
 	nop                  ; 1   +7
-	out    PORTB, r21    ; 1   +8 end hi for '0' bit (3 clocks hi)
-	nop                  ; 1   +9
+	st      Y, r21		 ; 2
 	nop                  ; 1   +10
 	nop                  ; 1   +11
 	nop                  ; 1   +12
@@ -69,10 +76,9 @@ loop1:
 	nop                  ; 1   +19
 	bst    r18, 7        ; 1   +20 save last bit of data for fast branching
 	subi   r19, 1        ; 1   +21 how many more bits for this byte?
-	breq   bit8          ; 1/2 +22 last bit, do differently
-	rjmp   loop1         ; 2   +23, 10 total for 0 bit
-L1:
-	nop                  ; 1   +4
+	breq   eighth_pulse    ; 1/2 +22 last bit, do differently
+	rjmp   pulse_begin   ; 2   +23, 10 total for 0 bit
+pulse_one:
 	nop                  ; 1   +5
 	nop                  ; 1   +6
 	nop                  ; 1   +7
@@ -85,25 +91,23 @@ L1:
 	nop                  ; 1   +14
 	bst    r18, 7        ; 1   +15 save last bit of data for fast branching
 	subi   r19, 1        ; 1   +16 how many more bits for this byte
-	out    PORTB, r21    ; 1   +17 end hi for '1' bit (7 clocks hi)
-	nop                  ; 1   +18
+	st     Y, r21		 ; 2
 	nop                  ; 1   +19
 	nop                  ; 1   +20
 	nop                  ; 1   +21
 	nop                  ; 1   +22
-	brne   loop1         ; 2/1 +23 10 total for 1 bit (fall thru if last bit)
-bit8:
+	brne   pulse_begin   ; 2/1 +23 10 total for 1 bit (fall thru if last bit)
+eighth_pulse:
 	ldi    r19, 7        ; 1   +24 bit count for next byte
-	out    PORTB, r20    ; 1   +0 start of a bit pulse
-	brts   L2            ; 1/2 +1 branch if last bit is a 1
-	nop                  ; 1   +2
+	st     Y , r20		 ; 2
+	brts   eighth_one      ; 1/2 +1 branch if last bit is a 1
+eighth_zero:
 	nop                  ; 1   +3
 	nop                  ; 1   +4
 	nop                  ; 1   +5
 	nop                  ; 1   +6
 	nop                  ; 1   +7
-	out    PORTB, r21    ; 1   +8 end hi for '0' bit (3 clocks hi)
-	nop                  ; 1   +9
+	st    Y , r21		 ; 2
 	nop                  ; 1   +10
 	nop                  ; 1   +11
 	nop                  ; 1   +12
@@ -116,11 +120,11 @@ bit8:
 	ld     r18, X+       ; 2   +19 fetch next byte
 	sbiw   r24, 1        ; 2   +21 dec byte counter
 	breq return1		 ; 1/2 +23
-	rjmp loop1			 ; 2   +24
+	rjmp pulse_begin	 ; 2   +24
 return1:
 	out    SREG, r22     ; restore global int flag
 	ret
-L2:
+eighth_one:
 	ld     r18, X+       ; 2   +3 fetch next byte
 	nop					 ; 1   +5
 	nop					 ; 1   +6
@@ -134,13 +138,13 @@ L2:
 	nop                  ; 1   +14
 	nop                  ; 1   +15
 	nop                  ; 1   +16
-	out    PORTB, r21    ; 1   +17 end hi for '1' bit (17 clocks hi)
-	nop                  ; 1   +18
+	st     Y , r21		 ; 2
 	nop                  ; 1   +19
 	nop                  ; 1   +20
 	sbiw   r24, 1        ; 2   +21 dec byte counter
 	breq return2		 ; 1/2 +23
-	rjmp loop1			 ; 2   +24
+	rjmp pulse_begin	 ; 2   +24
 return2:
 	out    SREG, r22     ; restore global int flag
 	ret
+
