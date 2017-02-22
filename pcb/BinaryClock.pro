@@ -1,4 +1,4 @@
-update=Tuesday, January 17, 2017 'PMt' 08:58:45 PM
+update=mar 21 feb 2017 18:26:22 MST
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,4 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=maxim
+LibName31=binaryclock
