@@ -1,3 +1,4 @@
-# Arduino Binary Wall Clock
+# AIS Denver Binary Wall Clock
 
-Documentation and pictures coming soon
+Source code and PCB design for the AIS Denver Binary Wall Clock.
+This project is still a work in progress.
