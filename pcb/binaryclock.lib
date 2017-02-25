@@ -1,0 +1,37 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# avr-programming-header
+#
+DEF avr-programming-header U 0 40 Y Y 1 F N
+F0 "U" 0 350 60 H V C CNN
+F1 "avr-programming-header" 0 -350 60 H V C CNN
+F2 "" 0 0 60 H I C CNN
+F3 "" 0 0 60 H I C CNN
+DRAW
+S -250 250 200 -250 0 1 0 N
+X GND ~ 400 -150 200 L 50 50 1 1 I
+X MISO ~ -450 150 200 R 50 50 1 1 I
+X MOSI ~ 400 0 200 L 50 50 1 1 I
+X RES ~ -450 -150 200 R 50 50 1 1 I
+X SCK ~ -450 0 200 R 50 50 1 1 I
+X VCC ~ 400 150 200 L 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+# clock_header
+#
+DEF clock_header U 0 40 Y Y 1 F N
+F0 "U" 0 250 60 H V C CNN
+F1 "clock_header" 0 -250 60 H V C CNN
+F2 "" -350 -50 60 H I C CNN
+F3 "" -350 -50 60 H I C CNN
+DRAW
+S -150 150 150 -150 0 1 0 N
+X data ~ -350 100 200 R 50 50 1 1 I
+X gnd ~ -350 -100 200 R 50 50 1 1 I
+X power ~ -350 0 200 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+#End Library
