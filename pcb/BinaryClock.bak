@@ -30,6 +30,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:maxim
 LIBS:binaryclock
+LIBS:BinaryClock-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -266,9 +267,13 @@ F 3 "" H 4100 3200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7950 4800 8950 4800
+	7950 4800 8550 4800
 Wire Wire Line
-	7950 4900 8950 4900
+	8550 4800 8950 4800
+Wire Wire Line
+	7950 4900 8850 4900
+Wire Wire Line
+	8850 4900 8950 4900
 Connection ~ 8550 4800
 Connection ~ 8850 4900
 Wire Wire Line
@@ -284,18 +289,24 @@ Wire Wire Line
 Wire Wire Line
 	7950 2550 8350 2550
 Wire Wire Line
-	6300 2850 7450 2850
+	6300 2850 7100 2850
+Wire Wire Line
+	7100 2850 7450 2850
 Connection ~ 7100 2850
 Wire Wire Line
 	7750 2850 7900 2850
 Wire Wire Line
-	7900 2850 7900 3550
+	7900 2850 7900 3250
+Wire Wire Line
+	7900 3250 7900 3550
 Wire Wire Line
 	6400 3050 6800 3050
 Wire Wire Line
 	6800 3050 6800 3150
 Wire Wire Line
-	6800 3150 7450 3150
+	6800 3150 7100 3150
+Wire Wire Line
+	7100 3150 7450 3150
 Wire Wire Line
 	7450 3150 7450 3250
 Connection ~ 7100 3150
@@ -317,7 +328,9 @@ Wire Wire Line
 Wire Wire Line
 	6600 2450 6300 2450
 Wire Wire Line
-	8550 3950 8550 4200
+	8550 3950 8550 4050
+Wire Wire Line
+	8550 4050 8550 4200
 Wire Wire Line
 	8550 4500 8550 4800
 Wire Wire Line
@@ -325,7 +338,9 @@ Wire Wire Line
 Wire Wire Line
 	8850 4500 8850 4900
 Wire Wire Line
-	4050 1900 4050 2350
+	4050 1900 4050 2250
+Wire Wire Line
+	4050 2250 4050 2350
 Wire Wire Line
 	4050 2350 4400 2350
 Wire Wire Line
@@ -334,7 +349,13 @@ Connection ~ 4050 2250
 Wire Wire Line
 	4400 4350 4100 4350
 Wire Wire Line
-	4100 3350 4100 4800
+	4100 3350 4100 4350
+Wire Wire Line
+	4100 4350 4100 4450
+Wire Wire Line
+	4100 4450 4100 4550
+Wire Wire Line
+	4100 4550 4100 4800
 Wire Wire Line
 	4400 4450 4100 4450
 Connection ~ 4100 4450
@@ -367,7 +388,7 @@ U 1 1 58915B8E
 P 2300 3250
 F 0 "CON1" H 2195 3490 50  0000 C CNN
 F 1 "AVR-ISP-6" H 2035 3020 50  0000 L BNN
-F 2 "Pin_Headers:Pin_Header_Angled_2x03_Pitch2.54mm" V 1780 3290 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x03_Pitch2.54mm" V 1780 3290 50  0001 C CNN
 F 3 "" H 2275 3250 50  0000 C CNN
 	1    2300 3250
 	1    0    0    -1  
@@ -451,55 +472,12 @@ Wire Wire Line
 Wire Wire Line
 	2750 3350 2400 3350
 $Comp
-L LM78M05CT U1
-U 1 1 589165BE
-P 2300 1450
-F 0 "U1" H 2100 1650 50  0000 C CNN
-F 1 "LM78M05CT" H 2300 1650 50  0000 L CNN
-F 2 "Power_Integrations:TO-220" H 2300 1550 50  0000 C CIN
-F 3 "" H 2300 1450 50  0000 C CNN
-	1    2300 1450
-	1    0    0    -1  
-$EndComp
-Text Label 1700 1400 2    60   ~ 0
-VIN
-Wire Wire Line
-	1700 1400 1900 1400
-$Comp
-L VCC #PWR011
-U 1 1 58916735
-P 2900 1300
-F 0 "#PWR011" H 2900 1150 50  0001 C CNN
-F 1 "VCC" H 2900 1450 50  0000 C CNN
-F 2 "" H 2900 1300 50  0000 C CNN
-F 3 "" H 2900 1300 50  0000 C CNN
-	1    2900 1300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2900 1300 2900 1400
-Wire Wire Line
-	2900 1400 2700 1400
-$Comp
-L GND #PWR012
-U 1 1 589167B9
-P 2300 1850
-F 0 "#PWR012" H 2300 1600 50  0001 C CNN
-F 1 "GND" H 2300 1700 50  0000 C CNN
-F 2 "" H 2300 1850 50  0000 C CNN
-F 3 "" H 2300 1850 50  0000 C CNN
-	1    2300 1850
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2300 1850 2300 1700
-$Comp
 L clock_header U3
 U 1 1 58ACEEBD
 P 10300 1550
 F 0 "U3" H 10300 1800 60  0000 C CNN
 F 1 "clock_header" H 10300 1300 60  0000 C CNN
-F 2 "" H 9950 1500 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 9950 1500 60  0001 C CNN
 F 3 "" H 9950 1500 60  0001 C CNN
 	1    10300 1550
 	1    0    0    -1  
@@ -510,7 +488,7 @@ U 1 1 58ACF06C
 P 10300 2200
 F 0 "U4" H 10300 2450 60  0000 C CNN
 F 1 "clock_header" H 10300 1950 60  0000 C CNN
-F 2 "" H 9950 2150 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 9950 2150 60  0001 C CNN
 F 3 "" H 9950 2150 60  0001 C CNN
 	1    10300 2200
 	1    0    0    -1  
@@ -521,7 +499,7 @@ U 1 1 58ACF0C9
 P 10350 2850
 F 0 "U5" H 10350 3100 60  0000 C CNN
 F 1 "clock_header" H 10350 2600 60  0000 C CNN
-F 2 "" H 10000 2800 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 10000 2800 60  0001 C CNN
 F 3 "" H 10000 2800 60  0001 C CNN
 	1    10350 2850
 	1    0    0    -1  
@@ -561,7 +539,11 @@ F 3 "" H 9400 3100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9250 1250 9250 2850
+	9250 1250 9250 1550
+Wire Wire Line
+	9250 1550 9250 2200
+Wire Wire Line
+	9250 2200 9250 2850
 Wire Wire Line
 	9250 2850 10000 2850
 Wire Wire Line
@@ -571,7 +553,11 @@ Wire Wire Line
 	9950 1550 9250 1550
 Connection ~ 9250 1550
 Wire Wire Line
-	9400 3100 9400 1650
+	9400 1650 9400 2300
+Wire Wire Line
+	9400 2300 9400 2950
+Wire Wire Line
+	9400 2950 9400 3100
 Wire Wire Line
 	9400 1650 9950 1650
 Wire Wire Line
@@ -589,4 +575,47 @@ Wire Wire Line
 Wire Wire Line
 	8250 5100 8950 5100
 Connection ~ 8550 4050
+$Comp
+L TPS7150QD U?
+U 1 1 58AE7B9A
+P 2550 1350
+F 0 "U?" H 2250 1700 50  0000 C CNN
+F 1 "TPS7150QD" H 2750 1700 50  0000 C CNN
+F 2 "SO-8" H 2550 1350 50  0000 C CIN
+F 3 "" H 2550 1350 50  0000 C CNN
+	1    2550 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 58AEEE1E
+P 2550 2050
+F 0 "#PWR?" H 2550 1800 50  0001 C CNN
+F 1 "GND" H 2550 1900 50  0000 C CNN
+F 2 "" H 2550 2050 50  0000 C CNN
+F 3 "" H 2550 2050 50  0000 C CNN
+	1    2550 2050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2550 1800 2550 2050
+$Comp
+L VCC #PWR?
+U 1 1 58AEEFF6
+P 3300 800
+F 0 "#PWR?" H 3300 650 50  0001 C CNN
+F 1 "VCC" H 3300 950 50  0000 C CNN
+F 2 "" H 3300 800 50  0000 C CNN
+F 3 "" H 3300 800 50  0000 C CNN
+	1    3300 800 
+	1    0    0    -1  
+$EndComp
+Text Label 1650 1150 2    60   ~ 0
+VIN
+Wire Wire Line
+	1650 1150 2050 1150
+Wire Wire Line
+	3050 1150 3300 1150
+Wire Wire Line
+	3300 1150 3300 800 
 $EndSCHEMATC
