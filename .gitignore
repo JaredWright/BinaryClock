@@ -1,1 +1,7 @@
 *.bak
+*.o
+*.elf
+*.hex
+.vagrant
+.DS_STORE
+
