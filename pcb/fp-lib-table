@@ -1,4 +1,5 @@
 (fp_lib_table
   (lib (name tapMatrix_Shield)(type KiCad)(uri "$(KIPRJMOD)/libraries/tapMatrix_Shield.pretty")(options "")(descr ""))
   (lib (name Battery_Holders)(type KiCad)(uri "$(KIPRJMOD)/libraries/Battery_Holders.pretty")(options "")(descr ""))
+  (lib (name ais_logo)(type KiCad)(uri "$(KIPRJMOD)/ais_logo.pretty")(options "")(descr ""))
 )
