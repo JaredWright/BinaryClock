@@ -1394,8 +1394,8 @@
   (segment (start 159.658 85.706) (end 157.48 87.884) (width 0.25) (layer F.Cu) (net 21) (tstamp 5929E355))
   (segment (start 160.458 84.464) (end 160.458 90.42) (width 0.25) (layer F.Cu) (net 22))
   (segment (start 160.458 90.42) (end 160.528 90.49) (width 0.25) (layer F.Cu) (net 22) (tstamp 5929E361))
-  (segment (start 157.48 63.627) (end 157.48 72.517) (width 0.25) (layer F.Cu) (net 25) (status 400000))
-  (segment (start 156.458 73.539) (end 156.458 76.064) (width 0.25) (layer F.Cu) (net 25) (tstamp 592F43F0) (status 800000))
+  (segment (start 157.48 63.627) (end 157.48 72.517) (width 0.25) (layer F.Cu) (net 25))
+  (segment (start 156.458 73.539) (end 156.458 76.064) (width 0.25) (layer F.Cu) (net 25) (tstamp 592F43F0))
   (segment (start 157.48 72.517) (end 156.458 73.539) (width 0.25) (layer F.Cu) (net 25) (tstamp 592F43EE))
 
   (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 58C1E07E) (hatch edge 0.508)
