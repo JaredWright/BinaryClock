@@ -3,5 +3,5 @@
 *.elf
 *.hex
 .vagrant
-.DS_STORE
+*.DS_Store
 

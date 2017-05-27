@@ -1,6 +1,6 @@
-update=mar 21 feb 2017 18:26:22 MST
+update=Saturday, May 27, 2017 'AMt' 10:58:35 AM
 version=1
-last_client=kicad
+last_client=eeschema
 [pcbnew]
 version=1
 LastNetListRead=
@@ -60,3 +60,4 @@ LibName28=contrib
 LibName29=valves
 LibName30=maxim
 LibName31=binaryclock
+LibName32=Atmel
