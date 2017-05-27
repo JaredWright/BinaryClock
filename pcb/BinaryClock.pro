@@ -1,4 +1,4 @@
-update=Saturday, May 27, 2017 'AMt' 10:58:35 AM
+update=Saturday, May 27, 2017 'AMt' 11:40:17 AM
 version=1
 last_client=eeschema
 [pcbnew]
@@ -27,7 +27,7 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=/Users/jared-ais/Documents/kicad-library/library
+LibDir=/Users/jared-ais/Documents/kicad-library/library;../pcb
 [eeschema/libraries]
 LibName1=power
 LibName2=device

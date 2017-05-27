@@ -2,4 +2,6 @@
   (lib (name tapMatrix_Shield)(type KiCad)(uri "$(KIPRJMOD)/libraries/tapMatrix_Shield.pretty")(options "")(descr ""))
   (lib (name Battery_Holders)(type KiCad)(uri "$(KIPRJMOD)/libraries/Battery_Holders.pretty")(options "")(descr ""))
   (lib (name ais_logo)(type KiCad)(uri "$(KIPRJMOD)/ais_logo.pretty")(options "")(descr ""))
+  (lib (name smd-semi)(type KiCad)(uri "$(KIPRJMOD)/libraries/smd-semi.pretty")(options "")(descr ""))
+  (lib (name IPC7351-Nominal)(type KiCad)(uri "$(KIPRJMOD)/libraries/IPC7351-Nominal.pretty")(options "")(descr ""))
 )
