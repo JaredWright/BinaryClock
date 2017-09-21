@@ -18,13 +18,15 @@ OBJ_FILES := $(C_FILES:.c=.o)
 OBJ_FILES += $(ASM_FILES:.S=.o)
 
 # avrdude options
-AVR_PORT ?= /dev/cu.usbmodem1421
+# AVR_PORT ?= /dev/cu.usbmodem14121
+AVR_PORT ?= usb
 AVR_DEVICE ?= ATMEGA328P
-AVR_PROGRAMMER ?= arduino
+# AVR_PROGRAMMER ?= arduino
+AVR_PROGRAMMER ?= dragon_isp
 AVR_BAUD ?= 115200
-AVR_FLAGS += -c $(AVR_PROGRAMMER) -p $(AVR_DEVICE) -P $(AVR_PORT) -b $(AVR_BAUD)
+AVR_FLAGS += -c $(AVR_PROGRAMMER) -p $(AVR_DEVICE) -P $(AVR_PORT) -b $(AVR_BAUD) -F
 
-all: $(OBJ_FILES) link hex
+all: $(OBJ_FILES) link hex set_time
 
 $(OBJ_FILES): $(C_FILES) $(ASM_FILES)
 
@@ -49,5 +51,10 @@ avrdude:
 teensy_loader:
 	teensy_loader_cli -mmcu=atmega32u4 -w $(OUT_NAME).hex
 
-.PHONY: all clean link hex flash
-
+# Utility app for setting the current time on the DS3231 RTC
+set_time: $(OBJ_FILES)
+	$(CC) $(CFLAGS) src/set_time.c -o src/set_time.o 
+	$(CC) $(LDFLAGS) src/set_time.o src/ds3231.o src/i2c.o -o set_time.elf
+	avr-objcopy -O ihex -R .eeprom set_time.elf set_time.hex 
+	
+.PHONY: all clean link hex flash set_time
