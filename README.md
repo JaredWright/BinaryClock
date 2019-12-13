@@ -1,4 +1,3 @@
-# AIS Denver Binary Wall Clock
+# Binary Wall Clock Art Project
 
-Source code and PCB design for the AIS Denver Binary Wall Clock.
-This project is still a work in progress.
+Source code and PCB design for a wall-mounted LED binary wall clock.
